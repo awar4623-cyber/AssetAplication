@@ -124,7 +124,7 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-slate-700 mb-1">Category <span class="text-red-500">*</span></label>
-                                        <select class="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                        <select id="assetCategory" class="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm">
                                             <option>Perangkat IT</option>
                                             <option>Machinery</option>
                                             <option>Kendaraan</option>
@@ -157,7 +157,7 @@
                                 <div class="grid grid-cols-2 gap-6 mb-8">
                                     <div>
                                         <label class="block text-sm font-medium text-slate-700 mb-1">Branch / Site</label>
-                                        <select class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm">
+                                        <select id="assetBranch" class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm">
                                             <option>Head Office - Jakarta</option>
                                             <option>Plant - Cikarang</option>
                                             <option>Branch - Surabaya</option>
@@ -186,7 +186,7 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-slate-700 mb-1">Acquisition Cost (IDR) <span class="text-red-500">*</span></label>
-                                        <input type="number" placeholder="0" class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm">
+                                        <input type="number" id="assetCost" placeholder="0" class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-slate-700 mb-1">Useful Life (Months)</label>
@@ -344,4 +344,8 @@
 </script>
 </body>
 </html>
+
+
+
+
 
