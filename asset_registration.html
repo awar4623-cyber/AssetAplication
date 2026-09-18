@@ -88,7 +88,7 @@
                         // 1. Hide Sidebar so they ONLY have access to this page
                         document.getElementById('mainSidebar').classList.remove('md:flex');
                         document.getElementById('mainSidebar').classList.add('hidden');
-                        document.getElementById('mainSidebar').style.display = 'none';
+                        document.getElementById('mainSidebar').style.display = 'none'; const hamb = document.getElementById('hamburgerMenu'); if(hamb) hamb.style.display = 'none';
 
                         // 2. Adjust Header for standalone view
                         document.getElementById('requesterLogo').classList.remove('hidden');
@@ -345,6 +345,10 @@
 </script>
 </body>
 </html>
+
+
+
+
 
 
 
