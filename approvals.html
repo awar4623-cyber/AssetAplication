@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -112,6 +112,90 @@
                         </div>
                     </div>
 
+                <a href="asset_tracking.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-location-crosshairs w-6"></i> Pelacakan Aset</a>
+
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Keuangan</p>
+                <a href="depreciation_simulator.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-calculator w-6"></i> Penyusutan</a>
+                <a href="under_construction.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-exchange-alt w-6"></i> Kapitalisasi</a>
+
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Sistem</p>
+                <a href="approvals.html" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md transition"><i class="fas fa-check-circle w-6"></i> Persetujuan <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span></a>
+                <a href="settings.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-cog w-6"></i> Pengaturan</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="h-16 bg-white border-b flex items-center justify-between px-8 shadow-sm">
+                <div>
+                    <h1 class="text-xl font-semibold">Persetujuan Menunggu Saya</h1>
+                    <p class="text-xs text-slate-500">Tugas yang memerlukan tinjauan dan otorisasi Anda</p>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="flex-1 overflow-y-auto p-8">
+                
+                <div class="space-y-4" id="approvalContainer">
+                    
+                    <!-- Task Item 1 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl mr-4 shrink-0">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 class="font-bold text-slate-800 text-lg">Kapitalisasi Aset</h3>
+                                    <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] font-bold rounded-full uppercase">Prioritas Tinggi</span>
+                                </div>
+                                <p class="text-sm text-slate-600 mt-1">Req ID: REQ-2026-901 | Req By: Budi (IT Dept)</p>
+                                <p class="text-sm font-medium text-slate-800 mt-2">1x Dell PowerEdge R740 Server <span class="text-slate-400 font-normal ml-2">Amount: Rp 120,000,000</span></p>
+                            </div>
+                        </div>
+                        <div class="mt-4 md:mt-0 flex space-x-3 w-full md:w-auto">
+                            <button onclick="this.parentNode.parentNode.style.display='none'" class="flex-1 md:flex-none px-4 py-2 border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 rounded-md text-sm font-medium transition"><i class="fas fa-times mr-2"></i>Tolak</button>
+                            <button onclick="this.parentNode.parentNode.style.display='none'" class="flex-1 md:flex-none px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition"><i class="fas fa-check mr-2"></i>Setujui</button>
+                        </div>
+                    </div>
+
+                    <!-- Task Item 2 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-xl mr-4 shrink-0">
+                                <i class="fas fa-trash-alt"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-lg">Penghapusan / Pemusnahan Aset</h3>
+                                <p class="text-sm text-slate-600 mt-1">Req ID: REQ-2026-882 | Req By: Sarah (Operations)</p>
+                                <p class="text-sm font-medium text-slate-800 mt-2">Toyota Hilux (Broken Engine) <span class="text-slate-400 font-normal ml-2">NBV: Rp 45,000,000</span></p>
+                            </div>
+                        </div>
+                        <div class="mt-4 md:mt-0 flex space-x-3 w-full md:w-auto">
+                            <button onclick="this.parentNode.parentNode.style.display='none'" class="flex-1 md:flex-none px-4 py-2 border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 rounded-md text-sm font-medium transition"><i class="fas fa-times mr-2"></i>Tolak</button>
+                            <button onclick="this.parentNode.parentNode.style.display='none'" class="flex-1 md:flex-none px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition"><i class="fas fa-check mr-2"></i>Setujui</button>
+                        </div>
+                    </div>
+
+                     <!-- Task Item 3 -->
+                     <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xl mr-4 shrink-0">
+                                <i class="fas fa-truck-moving"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-lg">Transfer Aset (Antar-Cabang)</h3>
+                                <p class="text-sm text-slate-600 mt-1">Req ID: REQ-2026-880 | Req By: HQ Logistics</p>
+                                <p class="text-sm font-medium text-slate-800 mt-2">Transfer 5x Workstation PCs to Surabaya Branch</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 md:mt-0 flex space-x-3 w-full md:w-auto">
+                            <button onclick="this.parentNode.parentNode.style.display='none'" class="flex-1 md:flex-none px-4 py-2 border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 rounded-md text-sm font-medium transition"><i class="fas fa-times mr-2"></i>Tolak</button>
+                            <button onclick="this.parentNode.parentNode.style.display='none'" class="flex-1 md:flex-none px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition"><i class="fas fa-check mr-2"></i>Setujui</button>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -119,6 +203,50 @@
     </div>
 
     <script>
+        function approveTask(reqId, reqBy, el) {
+            // Remove from pending
+            let pending = JSON.parse(localStorage.getItem('eams_pending_approvals') || '[]');
+            pending = pending.filter(t => t.reqId !== reqId);
+            localStorage.setItem('eams_pending_approvals', JSON.stringify(pending));
+
+            // Update asset status
+            let assets = JSON.parse(localStorage.getItem('eams_custom_assets') || '[]');
+            const targetCode = reqId.replace('REQ-', 'AST-');
+            let found = false;
+            for(let i=0; i<assets.length; i++){
+                if(assets[i].code === targetCode) {
+                    assets[i].status = 'Aktif';
+                    found = true;
+                    break;
+                }
+            }
+            localStorage.setItem('eams_custom_assets', JSON.stringify(assets));
+            
+            el.parentNode.parentNode.style.display = 'none';
+            alert('Berhasil! Aset dari Divisi ' + reqBy + ' telah disetujui (Approved) dan statusnya kini Aktif di Buku Besar Aset.');
+            window.location.reload();
+        }
+
+        function rejectTask(reqId, el) {
+            let pending = JSON.parse(localStorage.getItem('eams_pending_approvals') || '[]');
+            pending = pending.filter(t => t.reqId !== reqId);
+            localStorage.setItem('eams_pending_approvals', JSON.stringify(pending));
+
+            let assets = JSON.parse(localStorage.getItem('eams_custom_assets') || '[]');
+            const targetCode = reqId.replace('REQ-', 'AST-');
+            for(let i=0; i<assets.length; i++){
+                if(assets[i].code === targetCode) {
+                    assets[i].status = 'Ditolak';
+                    break;
+                }
+            }
+            localStorage.setItem('eams_custom_assets', JSON.stringify(assets));
+            
+            el.parentNode.parentNode.style.display = 'none';
+            alert('Pengajuan telah ditolak.');
+            window.location.reload();
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const pendingApprovals = JSON.parse(localStorage.getItem('eams_pending_approvals') || '[]');
             if (pendingApprovals.length > 0) {
@@ -143,8 +271,8 @@
                             </div>
                         </div>
                         <div class="mt-4 md:mt-0 flex space-x-3 w-full md:w-auto">
-                            <button onclick="this.parentNode.parentNode.style.display='none'; alert('Pengajuan ditolak.');" class="flex-1 md:flex-none px-4 py-2 border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 rounded-md text-sm font-medium transition"><i class="fas fa-times mr-2"></i>Tolak</button>
-                            <button onclick="this.parentNode.parentNode.style.display='none'; alert('Berhasil! Aset dari Divisi ${task.reqBy} telah disetujui (Approved) dan resmi masuk ke Buku Besar Aset.');" class="flex-1 md:flex-none px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition shadow-sm"><i class="fas fa-check mr-2"></i>Setujui</button>
+                            <button onclick="rejectTask('${task.reqId}', this)" class="flex-1 md:flex-none px-4 py-2 border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 rounded-md text-sm font-medium transition"><i class="fas fa-times mr-2"></i>Tolak</button>
+                            <button onclick="approveTask('${task.reqId}', '${task.reqBy}', this)" class="flex-1 md:flex-none px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition shadow-sm"><i class="fas fa-check mr-2"></i>Setujui</button>
                         </div>
                     `;
                     container.prepend(card);
