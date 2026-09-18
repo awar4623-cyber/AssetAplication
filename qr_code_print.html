@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -20,164 +20,190 @@
         }
     </style>
 </head>
-<body class="text-slate-800">
+<body class="text-slate-800 flex h-screen overflow-hidden">
 
-    <div class="flex h-screen overflow-hidden">
-        
-        <!-- Sidebar -->
-        <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col no-print">
-            <div class="h-16 flex items-center px-6 font-bold text-xl text-white tracking-wider border-b border-slate-700">
-                <i class="fas fa-boxes mr-3 text-blue-500"></i> EAMS
-            </div>
-            <div class="overflow-y-auto flex-1 px-4 py-6 space-y-2">
-                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Dasbor</p>
-                <a href="executive_dashboard.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-chart-line w-6"></i> Eksekutif</a>
-                
-                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Manajemen Aset</p>
-                <a href="all_assets.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-list w-6"></i> Semua Aset</a>
-                <a href="asset_registration.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-plus-circle w-6"></i> Daftar Aset Baru</a>
-                <a href="qr_code_print.html" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md transition"><i class="fas fa-qrcode w-6"></i> Cetak Label QR</a>
+    <!-- Sidebar -->
+    <aside id="mainSidebar" class="w-64 bg-slate-900 text-slate-300 flex flex-col shrink-0 absolute md:relative z-50 h-full -translate-x-full md:translate-x-0 transition-transform duration-300 no-print">
+        <div class="h-16 flex items-center justify-between px-6 font-bold text-xl text-white tracking-wider border-b border-slate-700">
+            <div class="flex items-center"><i class="fas fa-boxes mr-3 text-blue-500"></i> EAMS</div>
+            <button onclick="document.getElementById('mainSidebar').classList.add('-translate-x-full')" class="md:hidden text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
+        </div>
+        <div class="overflow-y-auto flex-1 px-4 py-6 space-y-2">
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Dasbor</p>
+            <a href="executive_dashboard.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-chart-line w-6"></i> Eksekutif</a>
+            
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Manajemen Aset</p>
+            <a href="all_assets.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-list w-6"></i> Semua Aset</a>
+            <a href="asset_registration.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-plus-circle w-6"></i> Daftar Aset Baru</a>
+            <a href="qr_code_print.html" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md transition"><i class="fas fa-qrcode w-6"></i> Cetak Label QR</a>
 
-                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Keuangan</p>
-                <a href="depreciation_simulator.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-calculator w-6"></i> Penyusutan</a>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Keuangan</p>
+            <a href="depreciation_simulator.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-calculator w-6"></i> Penyusutan</a>
 
-                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Sistem</p>
-                <a href="approvals.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-check-circle w-6"></i> Persetujuan</a>
-            </div>
-        </aside>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Sistem</p>
+            <a href="approvals.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-check-circle w-6"></i> Persetujuan</a>
+            <a href="settings.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-cog w-6"></i> Pengaturan</a>
+        </div>
+    </aside>
 
-        <!-- Main Content -->
-        <main class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
-            <header class="h-16 bg-white border-b flex items-center justify-between px-8 shadow-sm no-print">
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header -->
+        <header class="h-16 bg-white border-b flex items-center justify-between px-4 md:px-8 shadow-sm no-print">
+            <div class="flex items-center">
+                <button onclick="document.getElementById('mainSidebar').classList.toggle('-translate-x-full')" class="md:hidden mr-4 text-slate-600 hover:text-blue-600 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
                 <div>
-                    <h1 class="text-xl font-semibold">Generator QR Code Massal</h1>
-                    <p class="text-xs text-slate-500">Buat dan cetak label fisik untuk aset aktif</p>
+                    <h1 class="text-lg md:text-xl font-semibold">Generator QR Code Massal</h1>
+                    <p class="text-xs text-slate-500 hidden md:block">Buat dan cetak label fisik untuk aset aktif</p>
+                </div>
+            </div>
+            <div>
+                <button onclick="window.print()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium text-sm shadow-sm"><i class="fas fa-print mr-2"></i>Cetak</button>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-100">
+            
+            <!-- Filter Section (No Print) -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-8 flex flex-wrap gap-4 items-end no-print">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori</label>
+                    <select class="px-3 py-1.5 border rounded-md text-sm w-full md:w-40 focus:ring-1 focus:ring-blue-500">
+                        <option value="all">Semua Kategori</option>
+                        <option value="Alat Berat">Alat Berat</option>
+                        <option value="Kendaraan">Kendaraan</option>
+                        <option value="Perangkat IT">Perangkat IT</option>
+                        <option value="Furnitur & Fixtures">Furnitur & Fixtures</option>
+                    </select>
                 </div>
                 <div>
-                    <button onclick="window.print()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium text-sm shadow-sm"><i class="fas fa-print mr-2"></i>Cetak Label</button>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Cabang</label>
+                    <select class="px-3 py-1.5 border rounded-md text-sm w-full md:w-48 focus:ring-1 focus:ring-blue-500">
+                        <option value="all">Semua Cabang</option>
+                        <option value="HQ Jakarta">HQ Jakarta</option>
+                        <option value="Plant Cikarang">Plant Cikarang</option>
+                        <option value="DC Cyberjaya">DC Cyberjaya</option>
+                    </select>
                 </div>
-            </header>
-
-            <!-- Content -->
-            <div class="flex-1 overflow-y-auto p-8 bg-slate-100">
-                
-                <!-- Filter Section (No Print) -->
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-8 flex space-x-4 items-end no-print">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Branch</label>
-                        <select class="px-3 py-1.5 border rounded-md text-sm w-48 focus:ring-1 focus:ring-blue-500">
-                            <option>HQ Jakarta</option>
-                            <option>Plant Cikarang</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Acquisition Year</label>
-                        <select class="px-3 py-1.5 border rounded-md text-sm w-32 focus:ring-1 focus:ring-blue-500">
-                            <option>2026</option>
-                            <option>2025</option>
-                        </select>
-                    </div>
-                    <button class="px-4 py-1.5 bg-slate-800 text-white rounded-md text-sm font-medium hover:bg-slate-900">Tampilkan Aset</button>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tahun Perolehan</label>
+                    <select class="px-3 py-1.5 border rounded-md text-sm w-full md:w-32 focus:ring-1 focus:ring-blue-500">
+                        <option value="all">Semua Tahun</option>
+                        <option value="2026">2026</option>
+                        <option value="2025">2025</option>
+                    </select>
                 </div>
-
-                <!-- Print Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 print-grid" id="qrContainer">
-                    <!-- Cards will be generated here by JS -->
-                </div>
-
+                <button class="px-4 py-1.5 bg-slate-800 text-white rounded-md text-sm font-medium hover:bg-slate-900 flex-1 md:flex-none" id="btnTampilkan">Tampilkan Aset</button>
             </div>
-        </main>
-    </div>
+
+            <!-- Print Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 print-grid" id="qrContainer">
+                <!-- Cards will be generated here by JS -->
+            </div>
+
+        </div>
+    </main>
 
     <script>
-        let assets = [
-            { code: "AST-2026-001", name: "Komatsu PC200" },
-            { code: "AST-2026-002", name: "Toyota Alphard" },
-            { code: "AST-2026-003", name: "Cisco Catalyst Switch" },
-            { code: "AST-2026-004", name: "Dell PowerEdge R740" },
-            { code: "AST-2026-005", name: "Herman Miller Chair" },
-            { code: "AST-2026-006", name: "MacBook Pro M2" },
-            { code: "AST-2026-007", name: "Samsung 65' TV" },
-            { code: "AST-2026-008", name: "Epson Projector" }
+        let baseAssets = [
+            { code: "AST-2026-001", name: "Komatsu PC200", category: "Alat Berat", branch: "Plant Cikarang" },
+            { code: "AST-2026-002", name: "Toyota Alphard", category: "Kendaraan", branch: "HQ Jakarta" },
+            { code: "AST-2026-003", name: "Cisco Catalyst Switch", category: "Perangkat IT", branch: "DC Cyberjaya" },
+            { code: "AST-2026-004", name: "Dell PowerEdge R740", category: "Perangkat IT", branch: "HQ Jakarta" },
+            { code: "AST-2026-005", name: "Herman Miller Chair", category: "Furnitur & Fixtures", branch: "HQ Jakarta" },
+            { code: "AST-2026-006", name: "MacBook Pro M2", category: "Perangkat IT", branch: "HQ Jakarta" },
+            { code: "AST-2026-007", name: "Samsung 65' TV", category: "Furnitur & Fixtures", branch: "Plant Cikarang" },
+            { code: "AST-2025-008", name: "Epson Projector", category: "Perangkat IT", branch: "HQ Jakarta" }
         ];
 
-        // Load Custom Assets from Registration Form
-        const customAssets = JSON.parse(localStorage.getItem('eams_custom_assets') || '[]');
-        if (customAssets.length > 0) {
-            // Map the detailed objects into the simplified format needed here
-            const formattedCustomAssets = customAssets.map(a => ({ code: a.code, name: a.name }));
-            // Prepend so newest show up first
-            assets = [...formattedCustomAssets, ...assets];
+        function getAllAssets() {
+            const customAssets = JSON.parse(localStorage.getItem('eams_custom_assets') || '[]');
+            const formattedCustomAssets = customAssets.map(a => ({ code: a.code, name: a.name, category: a.category, branch: a.branch }));
+            return [...formattedCustomAssets, ...baseAssets];
         }
 
-        const container = document.getElementById('qrContainer');
-
-        assets.forEach((asset, index) => {
-            // Create Card Element
-            const card = document.createElement('div');
-            card.className = "print-card bg-white border-2 border-slate-800 rounded-lg p-4 flex flex-col items-center";
+        function renderQRCodes(data) {
+            const container = document.getElementById('qrContainer');
+            container.innerHTML = '';
             
-            // Generate HTML structure
-            card.innerHTML = `
-                <div class="text-center border-b-2 border-slate-800 pb-2 w-full mb-4">
-                    <h4 class="font-bold text-slate-800 text-sm leading-tight">PT. BORNEO ALUMINA INDONESIA</h4>
-                    <p class="text-[9px] text-slate-500">LABEL ASET</p>
-                </div>
-                <div id="qr-${index}" class="p-1 bg-white mb-2"></div>
-                <div class="text-center w-full mt-1">
-                    <p class="font-mono font-bold text-lg text-slate-800 tracking-wider">${asset.code}</p>
-                    <p class="text-xs text-slate-700 font-semibold mt-1 truncate px-2">${asset.name}</p>
-                </div>
-            `;
-            container.appendChild(card);
+            if(data.length === 0) {
+                container.innerHTML = '<div class="col-span-1 md:col-span-4 text-center text-slate-500 py-12">Tidak ada aset yang cocok dengan filter.</div>';
+                return;
+            }
 
-            // Render QR
-            new QRCode(document.getElementById(`qr-${index}`), {
-                text: JSON.stringify({id: asset.code, n: asset.name}),
-                width: 100,
-                height: 100,
-                colorDark : "#0f172a",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.M
+            data.forEach((asset, index) => {
+                const card = document.createElement('div');
+                card.className = "print-card bg-white border-2 border-slate-800 rounded-lg p-4 flex flex-col items-center";
+                card.innerHTML = `
+                    <div class="text-center border-b-2 border-slate-800 pb-2 w-full mb-4">
+                        <h4 class="font-bold text-slate-800 text-sm leading-tight">PT. BORNEO ALUMINA INDONESIA</h4>
+                        <p class="text-[9px] text-slate-500">LABEL ASET</p>
+                    </div>
+                    <div id="qr-${index}" class="p-1 bg-white mb-2"></div>
+                    <div class="text-center w-full mt-1">
+                        <p class="font-mono font-bold text-lg text-slate-800 tracking-wider">${asset.code}</p>
+                        <p class="text-xs text-slate-700 font-semibold mt-1 truncate px-2" title="${asset.name}">${asset.name}</p>
+                    </div>
+                `;
+                container.appendChild(card);
+
+                new QRCode(document.getElementById(`qr-${index}`), {
+                    text: JSON.stringify({id: asset.code, n: asset.name}),
+                    width: 100,
+                    height: 100,
+                    colorDark : "#0f172a",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.M
+                });
             });
+        }
+
+        function filterAssets() {
+            const catFilters = document.querySelectorAll('select');
+            const catFilter = catFilters[0].value;
+            const branchFilter = catFilters[1].value;
+            const yearFilter = catFilters[2].value;
+
+            const btn = document.getElementById('btnTampilkan');
+            const oldText = btn.innerText;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            setTimeout(() => {
+                const all = getAllAssets();
+                const filtered = all.filter(a => {
+                    let mc = true;
+                    if(catFilter !== 'all') {
+                        if(a.category !== catFilter) mc = false;
+                    }
+                    
+                    let mb = true;
+                    if(branchFilter !== 'all') {
+                        if(a.branch !== branchFilter) mb = false;
+                    }
+                    
+                    let my = true;
+                    if(yearFilter !== 'all') {
+                        if(!a.code.includes(yearFilter)) my = false;
+                    }
+
+                    return mc && mb && my;
+                });
+                
+                renderQRCodes(filtered);
+                btn.innerHTML = oldText;
+            }, 400);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const btn = document.getElementById('btnTampilkan');
+            if(btn) {
+                btn.onclick = filterAssets;
+            }
+            renderQRCodes(getAllAssets());
         });
     </script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const userName = localStorage.getItem('eams_user_name');
-        const userDivision = localStorage.getItem('eams_user_division');
-        const userRole = localStorage.getItem('eams_user_role');
-        
-        if (userName) {
-            const nameEl = document.getElementById('sidebarUserName');
-            if (nameEl) nameEl.textContent = userName;
-            
-            const avatarEl = document.getElementById('sidebarUserAvatar');
-            if (avatarEl) {
-                const initials = userName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
-                avatarEl.textContent = initials;
-            }
-        }
-        if (userDivision) {
-            const roleEl = document.getElementById('sidebarUserRole');
-            if (roleEl) {
-                if (userRole === 'admin') {
-                    roleEl.textContent = 'Admin - ' + userDivision;
-                } else {
-                    roleEl.textContent = 'Staff - ' + userDivision;
-                }
-            }
-        }
-    });
-</script>
 </body>
 </html>
-
-
-
-
-
-
-
-
