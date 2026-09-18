@@ -110,6 +110,7 @@
                                     <td class="px-6 py-4 font-medium">Komatsu Excavator PC200</td>
                                     <td class="px-6 py-4">Alat Berat</td>
                                     <td class="px-6 py-4">Plant Cikarang</td>
+                                    <td class="px-6 py-4 text-right font-medium">1,475,000,000</td>
                                     <td class="px-6 py-4 text-right text-red-500">25,000,000</td>
                                     <td class="px-6 py-4 text-right text-red-500">225,000,000</td>
                                     <td class="px-6 py-4 text-right font-medium">1,250,000,000</td>
@@ -124,6 +125,7 @@
                                     <td class="px-6 py-4 font-medium">Toyota Alphard 2.5 G</td>
                                     <td class="px-6 py-4">Kendaraan</td>
                                     <td class="px-6 py-4">HQ Jakarta</td>
+                                    <td class="px-6 py-4 text-right font-medium">985,000,000</td>
                                     <td class="px-6 py-4 text-right text-red-500">15,000,000</td>
                                     <td class="px-6 py-4 text-right text-red-500">135,000,000</td>
                                     <td class="px-6 py-4 text-right font-medium">850,000,000</td>
@@ -138,6 +140,7 @@
                                     <td class="px-6 py-4 font-medium">Cisco Catalyst Switch</td>
                                     <td class="px-6 py-4">Perangkat IT</td>
                                     <td class="px-6 py-4">DC Cyberjaya</td>
+                                    <td class="px-6 py-4 text-right font-medium">58,500,000</td>
                                     <td class="px-6 py-4 text-right text-red-500">1,500,000</td>
                                     <td class="px-6 py-4 text-right text-red-500">13,500,000</td>
                                     <td class="px-6 py-4 text-right font-medium">45,000,000</td>
@@ -198,8 +201,10 @@
                     <td class="px-6 py-4 font-medium">${asset.name} <span class="ml-2 px-1.5 py-0.5 bg-blue-100 text-blue-700 text-[10px] rounded uppercase font-bold">New</span></td>
                     <td class="px-6 py-4">${asset.category}</td>
                     <td class="px-6 py-4">${asset.branch}</td>
-                    <td class="px-6 py-4 text-right text-red-500">0</td>
-                    <td class="px-6 py-4 text-right text-red-500">0</td>
+                    <td class="px-6 py-4 text-right font-medium">12,500,000</td>
+                                    <td class="px-6 py-4 text-right text-red-500">0</td>
+                    <td class="px-6 py-4 text-right font-medium">12,500,000</td>
+                                    <td class="px-6 py-4 text-right text-red-500">0</td>
                     <td class="px-6 py-4 text-right font-medium">${fmtCost}</td>
                     <td class="px-6 py-4 text-center"><span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">${asset.status}</span></td>
                     <td class="px-6 py-4 text-center">
@@ -321,8 +326,53 @@
         }
     });
 </script>
+<script>
+    function deleteRow(btn, code) {
+        if(confirm('Yakin ingin menghapus aset ini?')) {
+            // Hapus baris dari tabel
+            const tr = btn.closest('tr');
+            tr.remove();
+
+            // Jika ada kode (berarti aset custom), hapus dari localStorage
+            if(code) {
+                let assets = JSON.parse(localStorage.getItem('eams_custom_assets') || '[]');
+                assets = assets.filter(a => a.code !== code);
+                localStorage.setItem('eams_custom_assets', JSON.stringify(assets));
+            }
+        }
+    }
+
+    function editRow(btn, code) {
+        const tr = btn.closest('tr');
+        const cells = tr.querySelectorAll('td');
+        const oldName = cells[1].innerText.replace('NEW', '').trim();
+        
+        const newName = prompt('Ubah Nama Aset:', oldName);
+        if(!newName || newName === oldName) return;
+
+        // Update UI
+        if(cells[1].innerHTML.includes('<span')) {
+            cells[1].innerHTML = newName + ' <span class="ml-2 px-1.5 py-0.5 bg-blue-100 text-blue-700 text-[10px] rounded uppercase font-bold">New</span>';
+        } else {
+            cells[1].innerText = newName;
+        }
+
+        // Update localStorage
+        if(code) {
+            let assets = JSON.parse(localStorage.getItem('eams_custom_assets') || '[]');
+            const idx = assets.findIndex(a => a.code === code);
+            if(idx > -1) {
+                assets[idx].name = newName;
+                localStorage.setItem('eams_custom_assets', JSON.stringify(assets));
+            }
+        }
+    }
+</script>
 </body>
 </html>
+
+
+
 
 
 
