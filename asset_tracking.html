@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAMS - Pelacakan Aset Enterprise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #3b82f6;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #3b82f6;
+        }
+        .timeline-item.done::before { background-color: #10b981; box-shadow: 0 0 0 2px #10b981; }
+        .timeline-item.warning::before { background-color: #f59e0b; box-shadow: 0 0 0 2px #f59e0b; }
+    </style>
+</head>
+<body class="text-slate-800 flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col shrink-0">
+        <div class="h-16 flex items-center px-6 font-bold text-xl text-white tracking-wider border-b border-slate-700">
+            <i class="fas fa-boxes mr-3 text-blue-500"></i> EAMS <span class="text-xs ml-2 text-slate-400 font-normal">Enterprise</span>
+        </div>
+        <div class="overflow-y-auto flex-1 px-4 py-6 space-y-2">
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Dasbor</p>
+            <a href="executive_dashboard.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-chart-line w-6"></i> Eksekutif</a>
+            <a href="operational_dashboard.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-chart-pie w-6"></i> Operasional</a>
+            
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Manajemen Aset</p>
+            <a href="all_assets.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-list w-6"></i> Semua Aset</a>
+            <a href="asset_registration.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-plus-circle w-6"></i> Daftar Aset Baru</a>
+            <a href="qr_code_print.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-qrcode w-6"></i> Cetak Label QR</a>
+            <a href="asset_tracking.html" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md transition shadow-sm"><i class="fas fa-location-crosshairs w-6"></i> Pelacakan Aset</a>
+
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Keuangan</p>
+            <a href="depreciation_simulator.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-calculator w-6"></i> Penyusutan</a>
+            <a href="under_construction.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-exchange-alt w-6"></i> Kapitalisasi</a>
+
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Sistem</p>
+            <a href="approvals.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-check-circle w-6"></i> Persetujuan <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span></a>
+            <a href="under_construction.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-cog w-6"></i> Pengaturan</a>
+        </div>
+        
+        <div class="p-4 border-t border-slate-700 mt-auto flex items-center">
+            <div id="sidebarUserAvatar" class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-3">JD</div>
+            <div>
+                <p id="sidebarUserName" class="text-sm font-medium text-white">John Doe</p>
+                <p id="sidebarUserRole" class="text-xs text-slate-400">Chief Financial Officer</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col overflow-hidden relative bg-slate-50">
+        
+        <header class="h-16 bg-white border-b flex items-center justify-between px-8 shadow-sm shrink-0">
+            <div>
+                <h1 class="text-xl font-semibold text-slate-800">Pelacakan & Audit Riwayat Aset</h1>
+                <p class="text-xs text-slate-500">Sistem Lacak Integrasi Skala Enterprise</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button onclick="scanQR()" class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition shadow-sm flex items-center"><i class="fas fa-barcode mr-2"></i>Scan Scanner</button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+            
+            <!-- Search Bar -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6 flex space-x-4 items-center">
+                <div class="flex-1 relative">
+                    <i class="fas fa-search absolute left-4 top-3 text-slate-400"></i>
+                    <input type="text" id="trackInput" placeholder="Masukkan ID Aset, Serial Number, atau Scan Barcode..." class="w-full pl-12 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-700">
+                </div>
+                <button onclick="trackAsset()" class="px-6 py-2 bg-slate-800 text-white rounded-lg font-medium hover:bg-slate-700 transition">Lacak Asset</button>
+            </div>
+
+            <div id="trackingResult" class="hidden">
+                <!-- Overview Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6 flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div class="flex items-center">
+                        <div class="w-16 h-16 bg-blue-50 rounded-lg border border-blue-100 flex items-center justify-center text-blue-600 text-3xl mr-6">
+                            <i class="fas fa-truck-moving"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-blue-600 mb-1" id="resId">AST-2026-001</p>
+                            <h2 class="text-2xl font-bold text-slate-800" id="resName">Komatsu Excavator PC200</h2>
+                            <p class="text-sm text-slate-500 mt-1"><i class="fas fa-tag mr-1"></i> Alat Berat &nbsp;|&nbsp; <i class="fas fa-barcode mr-1"></i> S/N: KMT-99281-XX</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 md:mt-0 text-right">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-bold border border-green-200 mb-2">
+                            <i class="fas fa-check-circle mr-2"></i> Beroperasi (Aktif)
+                        </span>
+                        <p class="text-xs text-slate-400">Terakhir discan: 2 jam yang lalu</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left: Audit Timeline -->
+                    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                        <h3 class="text-lg font-semibold text-slate-800 border-b pb-3 mb-6"><i class="fas fa-history mr-2 text-slate-400"></i> Riwayat Pergerakan & Audit (Lifecycle)</h3>
+                        
+                        <div class="relative pl-8 ml-4 border-l-2 border-slate-200 space-y-8">
+                            <!-- Item 1 -->
+                            <div class="relative timeline-item done">
+                                <span class="absolute -left-[105px] top-1 text-xs font-bold text-slate-500 text-right w-16">Hari ini<br><span class="font-normal text-slate-400">08:15 AM</span></span>
+                                <h4 class="text-md font-bold text-slate-800">Inspeksi Rutin Bulanan</h4>
+                                <p class="text-sm text-slate-600 mt-1">Inspeksi fisik dilakukan oleh tim Maintenance. Kondisi mesin dilaporkan prima. Oli hidrolik diganti.</p>
+                                <p class="text-xs font-bold text-blue-600 mt-2"><i class="fas fa-user-circle mr-1"></i> Budi Santoso (Div. Maintenance)</p>
+                            </div>
+                            
+                            <!-- Item 2 -->
+                            <div class="relative timeline-item done">
+                                <span class="absolute -left-[105px] top-1 text-xs font-bold text-slate-500 text-right w-16">10 Sep 26<br><span class="font-normal text-slate-400">14:30 PM</span></span>
+                                <h4 class="text-md font-bold text-slate-800">Mutasi Lokasi (Transfer)</h4>
+                                <p class="text-sm text-slate-600 mt-1">Aset dipindahkan secara fisik dari <b>HQ Jakarta</b> menuju ke <b>Plant Cikarang - Sektor B</b>.</p>
+                                <p class="text-xs font-bold text-blue-600 mt-2"><i class="fas fa-truck mr-1"></i> Tim Logistik Internal</p>
+                            </div>
+
+                            <!-- Item 3 -->
+                            <div class="relative timeline-item warning">
+                                <span class="absolute -left-[105px] top-1 text-xs font-bold text-slate-500 text-right w-16">02 Sep 26<br><span class="font-normal text-slate-400">09:00 AM</span></span>
+                                <h4 class="text-md font-bold text-slate-800">Tanda Terima & Kalibrasi</h4>
+                                <p class="text-sm text-slate-600 mt-1">Aset tiba di fasilitas perusahaan. Dilakukan kalibrasi awal dan pemasangan Label QR Code Enterprise.</p>
+                                <p class="text-xs font-bold text-blue-600 mt-2"><i class="fas fa-user-circle mr-1"></i> Agus (Tim Penerimaan)</p>
+                            </div>
+
+                            <!-- Item 4 -->
+                            <div class="relative timeline-item done">
+                                <span class="absolute -left-[105px] top-1 text-xs font-bold text-slate-500 text-right w-16">15 Agu 26<br><span class="font-normal text-slate-400">11:00 AM</span></span>
+                                <h4 class="text-md font-bold text-slate-800">Kapitalisasi & Pembelian</h4>
+                                <p class="text-sm text-slate-600 mt-1">Pembelian disetujui oleh Direktur Keuangan. Kapitalisasi senilai Rp 1.500.000.000 dicatat ke Buku Besar.</p>
+                                <p class="text-xs font-bold text-blue-600 mt-2"><i class="fas fa-file-invoice-dollar mr-1"></i> Sistem ERP SAP</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Specs & Location -->
+                    <div class="space-y-6">
+                        <!-- Location Map Simulation -->
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div class="p-4 border-b bg-slate-50">
+                                <h4 class="font-bold text-slate-800"><i class="fas fa-map-marker-alt text-red-500 mr-2"></i> Lokasi GPS Terakhir</h4>
+                            </div>
+                            <div class="h-48 bg-slate-200 relative">
+                                <!-- Dummy Map Image / Grid -->
+                                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-30"></div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="relative">
+                                        <div class="w-12 h-12 bg-blue-500/20 rounded-full animate-ping absolute -left-3 -top-3"></div>
+                                        <i class="fas fa-map-pin text-3xl text-red-500 drop-shadow-md z-10 relative"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 text-sm">
+                                <p class="font-bold text-slate-700">Plant Cikarang (Sektor B)</p>
+                                <p class="text-slate-500 text-xs mt-1">Lat: -6.3214, Long: 107.1539</p>
+                                <button class="mt-3 w-full py-2 bg-slate-100 text-slate-700 font-bold text-xs rounded border border-slate-300 hover:bg-slate-200">Lihat di Google Maps</button>
+                            </div>
+                        </div>
+
+                        <!-- Asset Value Info -->
+                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
+                            <h4 class="font-bold text-slate-800 mb-4 border-b pb-2"><i class="fas fa-coins text-yellow-500 mr-2"></i> Data Finansial</h4>
+                            <div class="space-y-3 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Nilai Perolehan</span>
+                                    <span class="font-bold text-slate-800">Rp 1,500,000,000</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Akumulasi Susut</span>
+                                    <span class="font-bold text-red-500">Rp (225,000,000)</span>
+                                </div>
+                                <div class="flex justify-between border-t pt-2 mt-2">
+                                    <span class="text-slate-800 font-bold">Net Book Value</span>
+                                    <span class="font-bold text-blue-600 text-base">Rp 1,275,000,000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="flex flex-col items-center justify-center py-20 text-center">
+                <div class="w-32 h-32 bg-blue-50 text-blue-300 rounded-full flex items-center justify-center text-5xl mb-6">
+                    <i class="fas fa-search-location"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-700 mb-2">Sistem Pelacakan Aset</h2>
+                <p class="text-slate-500 max-w-md">Masukkan Kode Aset pada kolom pencarian di atas untuk melihat riwayat audit, pergerakan lokasi, dan depresiasi secara real-time.</p>
+            </div>
+
+        </div>
+    </main>
+
+<script>
+    function trackAsset() {
+        const input = document.getElementById('trackInput').value.trim();
+        if(!input) {
+            alert('Silakan masukkan Kode Aset terlebih dahulu!');
+            return;
+        }
+
+        // Simulate network loading
+        document.getElementById('emptyState').classList.add('hidden');
+        document.getElementById('trackingResult').classList.add('hidden');
+        
+        const btn = document.querySelector('button[onclick="trackAsset()"]');
+        const origText = btn.innerText;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        setTimeout(() => {
+            btn.innerText = origText;
+            
+            // If they searched a custom asset from localStorage, try to map it
+            const customAssets = JSON.parse(localStorage.getItem('eams_custom_assets') || '[]');
+            const found = customAssets.find(a => a.code.toLowerCase() === input.toLowerCase() || a.name.toLowerCase().includes(input.toLowerCase()));
+            
+            if (found) {
+                document.getElementById('resId').innerText = found.code;
+                document.getElementById('resName').innerText = found.name;
+                // update other fields visually...
+            }
+
+            // Always show the result block for demo
+            document.getElementById('trackingResult').classList.remove('hidden');
+        }, 800);
+    }
+
+    function scanQR() {
+        alert("Simulasi: Mengaktifkan Kamera Barcode Scanner perangkat...\n\n(Pada implementasi riil, ini akan membuka API Kamera Web/Mobile)");
+        document.getElementById('trackInput').value = "AST-2026-001";
+        trackAsset();
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const userName = localStorage.getItem('eams_user_name');
+        const userDivision = localStorage.getItem('eams_user_division');
+        const userRole = localStorage.getItem('eams_user_role');
+        
+        if (userName) {
+            const nameEl = document.getElementById('sidebarUserName');
+            if (nameEl) nameEl.textContent = userName;
+            
+            const avatarEl = document.getElementById('sidebarUserAvatar');
+            if (avatarEl) {
+                const initials = userName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+                avatarEl.textContent = initials;
+            }
+        }
+        if (userDivision) {
+            const roleEl = document.getElementById('sidebarUserRole');
+            if (roleEl) {
+                if (userRole === 'admin') {
+                    roleEl.textContent = 'Admin - ' + userDivision;
+                } else {
+                    roleEl.textContent = 'Staff - ' + userDivision;
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
