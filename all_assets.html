@@ -59,7 +59,7 @@
                 <div class="flex items-center space-x-4">
                     <button onclick="runMonthEndDepreciation()" class="px-4 py-2 bg-orange-500 text-white rounded-md text-sm font-medium hover:bg-orange-600 transition shadow-sm"><i class="fas fa-calculator mr-2"></i>Penyusutan Akhir Bulan</button>
                     <a href="asset_registration.html" class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition shadow-sm"><i class="fas fa-plus mr-2"></i>Aset Baru</a>
-                    <button class="px-4 py-2 border border-slate-300 text-slate-700 rounded-md text-sm font-medium hover:bg-slate-50 transition shadow-sm"><i class="fas fa-file-excel mr-2 text-green-600"></i>Ekspor</button>
+                    <button onclick="exportTableToExcel()" class="px-4 py-2 border border-slate-300 text-slate-700 rounded-md text-sm font-medium hover:bg-slate-50 transition shadow-sm"><i class="fas fa-file-excel mr-2 text-green-600"></i>Ekspor</button>
                 </div>
             </header>
 
@@ -71,8 +71,8 @@
                     <!-- Toolbar -->
                     <div class="p-4 border-b bg-slate-50 flex justify-between items-center">
                         <div class="flex space-x-2">
-                            <input type="text" placeholder="Cari berdasarkan kode atau nama..." class="px-3 py-1.5 border rounded-md text-sm w-64 focus:ring-1 focus:ring-blue-500 outline-none">
-                            <select class="px-3 py-1.5 border rounded-md text-sm bg-white">
+                            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Cari berdasarkan kode atau nama..." class="px-3 py-1.5 border rounded-md text-sm w-64 focus:ring-1 focus:ring-blue-500 outline-none">
+                            <select id="categoryFilter" onchange="filterTable()" class="px-3 py-1.5 border rounded-md text-sm bg-white">
                                 <option>Semua Kategori</option>
                                 <option>Perangkat IT</option>
                                 <option>Alat Berat</option>
@@ -318,5 +318,6 @@
 </script>
 </body>
 </html>
+
 
 
