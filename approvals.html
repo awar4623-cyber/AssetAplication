@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAMS - Workflow Approvals</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col">
+            <div class="h-16 flex items-center px-6 font-bold text-xl text-white tracking-wider border-b border-slate-700">
+                <i class="fas fa-boxes mr-3 text-blue-500"></i> EAMS <span class="text-xs ml-2 text-slate-400 font-normal">Enterprise</span>
+            </div>
+            <div class="overflow-y-auto flex-1 px-4 py-6 space-y-2">
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Dasbor</p>
+                <a href="executive_dashboard.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-chart-line w-6"></i> Eksekutif</a>
+                <a href="operational_dashboard.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-chart-pie w-6"></i> Operasional</a>
+                
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Manajemen Aset</p>
+                <a href="all_assets.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-list w-6"></i> Semua Aset</a>
+                <a href="asset_registration.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-plus-circle w-6"></i> Daftar Aset Baru</a>
+                <a href="qr_code_print.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-qrcode w-6"></i> Cetak Label QR</a>
+
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Keuangan</p>
+                <a href="depreciation_simulator.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-calculator w-6"></i> Penyusutan</a>
+                <a href="under_construction.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-exchange-alt w-6"></i> Kapitalisasi</a>
+
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Sistem</p>
+                <a href="approvals.html" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md transition"><i class="fas fa-check-circle w-6"></i> Persetujuan <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span></a>
+                <a href="under_construction.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-cog w-6"></i> Pengaturan</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="h-16 bg-white border-b flex items-center justify-between px-8 shadow-sm">
+                <div>
+                    <h1 class="text-xl font-semibold">Persetujuan Menunggu Saya</h1>
+                    <p class="text-xs text-slate-500">Tugas yang memerlukan tinjauan dan otorisasi Anda</p>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="flex-1 overflow-y-auto p-8">
+                
+                <div class="space-y-4" id="approvalContainer">
+                    
+                    <!-- Task Item 1 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl mr-4 shrink-0">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 class="font-bold text-slate-800 text-lg">Kapitalisasi Aset</h3>
+                                    <span class="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-[10px] font-bold rounded-full uppercase">Prioritas Tinggi</span>
+                                </div>
+                                <p class="text-sm text-slate-600 mt-1">Req ID: REQ-2026-901 | Req By: Budi (IT Dept)</p>
+                                <p class="text-sm font-medium text-slate-800 mt-2">1x Dell PowerEdge R740 Server <span class="text-slate-400 font-normal ml-2">Amount: Rp 120,000,000</span></p>
+                            </div>
+                        </div>
+                        <div class="mt-4 md:mt-0 flex space-x-3 w-full md:w-auto">
+                            <button onclick="this.parentNode.parentNode.style.display='none'" class="flex-1 md:flex-none px-4 py-2 border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 rounded-md text-sm font-medium transition"><i class="fas fa-times mr-2"></i>Tolak</button>
+                            <button onclick="this.parentNode.parentNode.style.display='none'" class="flex-1 md:flex-none px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition"><i class="fas fa-check mr-2"></i>Setujui</button>
+                        </div>
+                    </div>
+
+                    <!-- Task Item 2 -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-xl mr-4 shrink-0">
+                                <i class="fas fa-trash-alt"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-lg">Penghapusan / Pemusnahan Aset</h3>
+                                <p class="text-sm text-slate-600 mt-1">Req ID: REQ-2026-882 | Req By: Sarah (Operations)</p>
+                                <p class="text-sm font-medium text-slate-800 mt-2">Toyota Hilux (Broken Engine) <span class="text-slate-400 font-normal ml-2">NBV: Rp 45,000,000</span></p>
+                            </div>
+                        </div>
+                        <div class="mt-4 md:mt-0 flex space-x-3 w-full md:w-auto">
+                            <button onclick="this.parentNode.parentNode.style.display='none'" class="flex-1 md:flex-none px-4 py-2 border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 rounded-md text-sm font-medium transition"><i class="fas fa-times mr-2"></i>Tolak</button>
+                            <button onclick="this.parentNode.parentNode.style.display='none'" class="flex-1 md:flex-none px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition"><i class="fas fa-check mr-2"></i>Setujui</button>
+                        </div>
+                    </div>
+
+                     <!-- Task Item 3 -->
+                     <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center">
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-xl mr-4 shrink-0">
+                                <i class="fas fa-truck-moving"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-lg">Transfer Aset (Antar-Cabang)</h3>
+                                <p class="text-sm text-slate-600 mt-1">Req ID: REQ-2026-880 | Req By: HQ Logistics</p>
+                                <p class="text-sm font-medium text-slate-800 mt-2">Transfer 5x Workstation PCs to Surabaya Branch</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 md:mt-0 flex space-x-3 w-full md:w-auto">
+                            <button onclick="this.parentNode.parentNode.style.display='none'" class="flex-1 md:flex-none px-4 py-2 border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 rounded-md text-sm font-medium transition"><i class="fas fa-times mr-2"></i>Tolak</button>
+                            <button onclick="this.parentNode.parentNode.style.display='none'" class="flex-1 md:flex-none px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition"><i class="fas fa-check mr-2"></i>Setujui</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const pendingApprovals = JSON.parse(localStorage.getItem('eams_pending_approvals') || '[]');
+            if (pendingApprovals.length > 0) {
+                const container = document.getElementById('approvalContainer');
+                
+                pendingApprovals.reverse().forEach(task => {
+                    const fmtCost = Number(task.cost).toLocaleString('en-US');
+                    const card = document.createElement('div');
+                    card.className = "bg-white p-6 rounded-xl shadow-sm border border-blue-300 flex flex-col md:flex-row justify-between items-start md:items-center bg-blue-50/20"; // Style differently for new tasks
+                    card.innerHTML = `
+                        <div class="flex items-start">
+                            <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl mr-4 shrink-0 shadow-sm border border-blue-200">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 class="font-bold text-slate-800 text-lg">${task.type}</h3>
+                                    <span class="px-2 py-0.5 bg-green-100 text-green-700 text-[10px] font-bold rounded-full uppercase border border-green-200">Baru Masuk</span>
+                                </div>
+                                <p class="text-sm text-slate-600 mt-1">ID Pengajuan: ${task.reqId} | Dari: <span class="font-bold text-blue-700">${task.reqBy}</span></p>
+                                <p class="text-sm font-medium text-slate-800 mt-2">${task.assetName} <span class="text-slate-400 font-normal ml-2">Nilai: Rp ${fmtCost}</span></p>
+                            </div>
+                        </div>
+                        <div class="mt-4 md:mt-0 flex space-x-3 w-full md:w-auto">
+                            <button onclick="this.parentNode.parentNode.style.display='none'; alert('Pengajuan ditolak.');" class="flex-1 md:flex-none px-4 py-2 border border-red-200 text-red-600 bg-red-50 hover:bg-red-100 rounded-md text-sm font-medium transition"><i class="fas fa-times mr-2"></i>Tolak</button>
+                            <button onclick="this.parentNode.parentNode.style.display='none'; alert('Berhasil! Aset dari Divisi ${task.reqBy} telah disetujui (Approved) dan resmi masuk ke Buku Besar Aset.');" class="flex-1 md:flex-none px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-medium transition shadow-sm"><i class="fas fa-check mr-2"></i>Setujui</button>
+                        </div>
+                    `;
+                    container.prepend(card);
+                });
+            }
+        });
+    </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const userName = localStorage.getItem('eams_user_name');
+        const userDivision = localStorage.getItem('eams_user_division');
+        const userRole = localStorage.getItem('eams_user_role');
+        
+        if (userName) {
+            const nameEl = document.getElementById('sidebarUserName');
+            if (nameEl) nameEl.textContent = userName;
+            
+            const avatarEl = document.getElementById('sidebarUserAvatar');
+            if (avatarEl) {
+                const initials = userName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+                avatarEl.textContent = initials;
+            }
+        }
+        if (userDivision) {
+            const roleEl = document.getElementById('sidebarUserRole');
+            if (roleEl) {
+                if (userRole === 'admin') {
+                    roleEl.textContent = 'Admin - ' + userDivision;
+                } else {
+                    roleEl.textContent = 'Staff - ' + userDivision;
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
+

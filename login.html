@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAMS - Login Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    </style>
+</head>
+<body class="flex items-center justify-center h-screen bg-slate-900">
+
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <div class="p-8 text-center bg-blue-600">
+            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center text-blue-600 text-3xl mx-auto mb-4 shadow-lg">
+                <i class="fas fa-boxes"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-white tracking-wider">EAMS PORTAL</h1>
+            <p class="text-blue-200 text-sm mt-1">PT. Borneo Alumina Indonesia</p>
+        </div>
+        
+        <div class="p-8">
+            <h2 class="text-xl font-semibold text-slate-800 mb-6 text-center">Masuk ke Sistem</h2>
+            
+            <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">Nama Lengkap</label>
+                    <input type="text" id="nameInput" placeholder="Contoh: Budi Santoso" required class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">Hak Akses (Role)</label>
+                    <select id="roleSelect" required class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 text-slate-700">
+                        <option value="admin">Eksekutif / Admin (Akses Penuh)</option>
+                        <option value="requester">Staf Divisi (Pengajuan Aset Saja)</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">Divisi</label>
+                    <select id="divisionSelect" required class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 text-slate-700">
+                        <option value="Finance & Accounting">Finance & Accounting</option>
+                        <option value="Internal Audit">Internal Audit</option>
+                        <option value="Legal">Legal</option>
+                        <option value="Corporate Secretary & Office Of The Board">Corporate Secretary & Office Of The Board</option>
+                        <option value="HSSE & Management System">HSSE & Management System</option>
+                        <option value="Alumina">Alumina</option>
+                        <option value="Utility">Utility</option>
+                        <option value="Technical Services">Technical Services</option>
+                        <option value="Maintenance">Maintenance</option>
+                        <option value="Strategic Business Support">Strategic Business Support</option>
+                        <option value="Corporate Governance & Risk Management">Corporate Governance & Risk Management</option>
+                        <option value="Supply Chain Management">Supply Chain Management</option>
+                        <option value="Logistic & Commercial">Logistic & Commercial</option>
+                        <option value="Business Development & Corporate Performance">Business Development & Corporate Performance</option>
+                    </select>
+                </div>
+
+                <div class="mb-8">
+                    <label class="block text-sm font-semibold text-slate-600 mb-2">Kata Sandi (Password)</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-4 top-3.5 text-slate-400"></i>
+                        <input type="password" id="passwordInput" required placeholder="Masukkan kata sandi..." class="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50">
+                    </div>
+                    <p class="text-[11px] text-slate-400 mt-2"><i class="fas fa-info-circle"></i> Gunakan kata sandi standar: <b>borneo2026</b></p>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors shadow-md">
+                    Masuk <i class="fas fa-sign-in-alt ml-2"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function handleLogin() {
+            const name = document.getElementById('nameInput').value;
+            const role = document.getElementById('roleSelect').value;
+            const division = document.getElementById('divisionSelect').value;
+            const password = document.getElementById('passwordInput').value;
+
+            if (password !== 'borneo2026') {
+                alert('Kata sandi salah! (Hint: gunakan borneo2026)');
+                return;
+            }
+
+            // Save login session state
+            localStorage.setItem('eams_logged_in', 'true');
+            localStorage.setItem('eams_user_name', name);
+            localStorage.setItem('eams_user_role', role);
+            localStorage.setItem('eams_user_division', division);
+
+            // Redirect based on role
+            if (role === 'requester') {
+                window.location.href = 'asset_registration.html';
+            } else {
+                window.location.href = 'executive_dashboard.html';
+            }
+        }
+    </script>
+</body>
+</html>

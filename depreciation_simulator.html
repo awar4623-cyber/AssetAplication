@@ -1,0 +1,275 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAMS - Depreciation Simulator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    </style>
+</head>
+<body class="text-slate-800 p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <div class="mb-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800"><i class="fas fa-calculator text-blue-600 mr-2"></i> Depreciation Simulator</h1>
+                <p class="text-sm text-slate-500 mt-1">Simulate asset depreciation schedules dynamically using the core algorithm.</p>
+            </div>
+            <a href="executive_dashboard.html" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-md text-sm font-medium transition">Kembali ke Dasbor</a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Settings Panel -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="text-lg font-semibold border-b pb-2 mb-6">Asset Parameters</h3>
+                
+                <form id="simForm" onsubmit="runSimulation(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Acquisition Biaya (Rp)</label>
+                            <input type="number" id="cost" value="120000000" class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Residual Value (Rp)</label>
+                            <input type="number" id="residual" value="10000000" class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Useful Life (Months)</label>
+                            <input type="number" id="life" value="48" class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Tgl Perolehan</label>
+                            <input type="date" id="date" value="2026-01-01" class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">Method</label>
+                            <select id="method" class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500">
+                                <option value="straight">Straight Line</option>
+                                <!-- Double declining can be added here -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium shadow-sm transition">
+                        Run Simulation
+                    </button>
+                </form>
+            </div>
+
+            <!-- Chart & Results -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- KPI -->
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                        <p class="text-xs text-slate-500 font-medium">Monthly Depreciation</p>
+                        <h4 class="text-xl font-bold text-slate-800 mt-1" id="lblMonthly">Rp 0</h4>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                        <p class="text-xs text-slate-500 font-medium">Depreciable Amount</p>
+                        <h4 class="text-xl font-bold text-slate-800 mt-1" id="lblDepreciable">Rp 0</h4>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 bg-blue-50 border-blue-100">
+                        <p class="text-xs text-blue-600 font-medium">Final Book Value</p>
+                        <h4 class="text-xl font-bold text-blue-800 mt-1" id="lblFinal">Rp 0</h4>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-sm font-semibold text-slate-700 mb-4">Book Value Projection</h3>
+                    <div class="h-64 relative">
+                        <canvas id="deprChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="mt-8 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b bg-slate-50">
+                <h3 class="text-sm font-semibold text-slate-700">Detailed Schedule</h3>
+            </div>
+            <div class="max-h-96 overflow-y-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead class="bg-white sticky top-0 border-b">
+                        <tr class="text-slate-500 font-medium">
+                            <th class="px-6 py-3">Period</th>
+                            <th class="px-6 py-3">Year</th>
+                            <th class="px-6 py-3">Month</th>
+                            <th class="px-6 py-3 text-right">Depreciation Expense (Rp)</th>
+                            <th class="px-6 py-3 text-right">Accumulated Depr. (Rp)</th>
+                            <th class="px-6 py-3 text-right">Net Book Value (Rp)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="divide-y divide-slate-100">
+                        <!-- Rows will be generated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- The Javascript Logic -->
+    <script>
+        const formatCurrency = (amount) => new Intl.NumberFormat('id-ID').format(amount);
+        let currentChart = null;
+
+        function runSimulation(e) {
+            if(e) e.preventDefault();
+
+            const cost = parseFloat(document.getElementById('cost').value);
+            const residual = parseFloat(document.getElementById('residual').value);
+            const life = parseInt(document.getElementById('life').value);
+            const acqDate = new Date(document.getElementById('date').value);
+
+            if(cost <= residual) {
+                alert("Acquisition cost must be greater than residual value.");
+                return;
+            }
+
+            // Engine Logic (From DepreciationEngine.js)
+            const depreciableAmount = cost - residual;
+            const monthlyExpense = depreciableAmount / life;
+
+            document.getElementById('lblMonthly').innerText = `Rp ${formatCurrency(monthlyExpense.toFixed(0))}`;
+            document.getElementById('lblDepreciable').innerText = `Rp ${formatCurrency(depreciableAmount)}`;
+            document.getElementById('lblFinal').innerText = `Rp ${formatCurrency(residual)}`;
+
+            let currentBookValue = cost;
+            let accumulatedDepreciation = 0;
+            let schedule = [];
+            
+            // Start deprecation on following month
+            let trackDate = new Date(acqDate);
+            trackDate.setMonth(trackDate.getMonth() + 1);
+
+            for(let i=1; i<=life; i++) {
+                let actualDepr = monthlyExpense;
+                if(i === life) {
+                    actualDepr = currentBookValue - residual; // Adjust last month for rounding
+                }
+
+                currentBookValue -= actualDepr;
+                accumulatedDepreciation += actualDepr;
+
+                schedule.push({
+                    period: i,
+                    year: trackDate.getFullYear(),
+                    month: trackDate.getMonth() + 1,
+                    expense: actualDepr,
+                    acc: accumulatedDepreciation,
+                    nbv: currentBookValue
+                });
+
+                trackDate.setMonth(trackDate.getMonth() + 1);
+            }
+
+            renderTable(schedule);
+            renderChart(schedule, cost);
+        }
+
+        function renderTable(schedule) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            schedule.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition";
+                tr.innerHTML = `
+                    <td class="px-6 py-3">${row.period}</td>
+                    <td class="px-6 py-3">${row.year}</td>
+                    <td class="px-6 py-3">${row.month}</td>
+                    <td class="px-6 py-3 text-right text-red-500 font-medium">${formatCurrency(row.expense.toFixed(0))}</td>
+                    <td class="px-6 py-3 text-right">${formatCurrency(row.acc.toFixed(0))}</td>
+                    <td class="px-6 py-3 text-right text-blue-600 font-medium">${formatCurrency(row.nbv.toFixed(0))}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderChart(schedule, initialCost) {
+            const ctx = document.getElementById('deprChart').getContext('2d');
+            
+            // To prevent overcrowded x-axis, sample data for chart if life > 24
+            let chartLabels = [];
+            let chartData = [];
+            
+            schedule.forEach(row => {
+                chartLabels.push(`${row.year}-${row.month.toString().padStart(2, '0')}`);
+                chartData.push(row.nbv.toFixed(0));
+            });
+
+            if(currentChart) {
+                currentChart.destroy();
+            }
+
+            currentChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'Net Book Value (Rp)',
+                        data: chartData,
+                        borderColor: '#2563eb', // blue-600
+                        backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        pointRadius: chartData.length > 36 ? 0 : 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        // Run once on load
+        window.onload = runSimulation;
+    </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const userName = localStorage.getItem('eams_user_name');
+        const userDivision = localStorage.getItem('eams_user_division');
+        const userRole = localStorage.getItem('eams_user_role');
+        
+        if (userName) {
+            const nameEl = document.getElementById('sidebarUserName');
+            if (nameEl) nameEl.textContent = userName;
+            
+            const avatarEl = document.getElementById('sidebarUserAvatar');
+            if (avatarEl) {
+                const initials = userName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+                avatarEl.textContent = initials;
+            }
+        }
+        if (userDivision) {
+            const roleEl = document.getElementById('sidebarUserRole');
+            if (roleEl) {
+                if (userRole === 'admin') {
+                    roleEl.textContent = 'Admin - ' + userDivision;
+                } else {
+                    roleEl.textContent = 'Staff - ' + userDivision;
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
+
+
+

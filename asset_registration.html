@@ -1,0 +1,347 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAMS - Asset Registration</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .step-active { border-color: #1d4ed8; color: #1d4ed8; font-weight: 600; }
+        .step-inactive { border-color: #e2e8f0; color: #94a3b8; }
+        .step-completed { border-color: #22c55e; color: #22c55e; }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside id="mainSidebar" class="w-64 bg-slate-900 text-slate-300 flex flex-col hidden md:flex z-50 shrink-0">
+            <div class="h-16 flex items-center px-6 font-bold text-xl text-white tracking-wider border-b border-slate-700">
+                <i class="fas fa-boxes mr-3 text-blue-500"></i> EAMS <span class="text-xs ml-2 text-slate-400 font-normal">Enterprise</span>
+            </div>
+            <div class="overflow-y-auto flex-1 px-4 py-6 space-y-2">
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Dasbor</p>
+                <a href="executive_dashboard.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-chart-line w-6"></i> Eksekutif</a>
+                <a href="operational_dashboard.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-chart-pie w-6"></i> Operasional</a>
+                
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Manajemen Aset</p>
+                <a href="all_assets.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-list w-6"></i> Semua Aset</a>
+                <a href="asset_registration.html" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md transition"><i class="fas fa-plus-circle w-6"></i> Daftar Aset Baru</a>
+                <a href="qr_code_print.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-qrcode w-6"></i> Cetak Label QR</a>
+
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Keuangan</p>
+                <a href="depreciation_simulator.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-calculator w-6"></i> Penyusutan</a>
+                <a href="under_construction.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-exchange-alt w-6"></i> Kapitalisasi</a>
+
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Sistem</p>
+                <a href="approvals.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-check-circle w-6"></i> Persetujuan <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span></a>
+                <a href="under_construction.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-cog w-6"></i> Pengaturan</a>
+            </div>
+            <div class="p-4 border-t border-slate-700">
+                <button onclick="logout()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 rounded text-sm text-center transition"><i class="fas fa-sign-out-alt mr-2"></i> Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden relative">
+            
+            <!-- Header -->
+            <header class="h-16 bg-white border-b flex items-center justify-between px-8 shadow-sm shrink-0">
+                <div class="flex items-center">
+                    <div id="requesterLogo" class="w-8 h-8 bg-blue-600 text-white rounded-lg flex items-center justify-center mr-3 hidden">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-semibold text-slate-800">Form Pengajuan Aset Baru</h1>
+                        <p class="text-xs text-slate-500" id="headerSubtitle">PT. Borneo Alumina Indonesia - Formulir Input</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="userDivisionBadge" class="hidden px-3 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full text-xs font-bold"></span>
+                    <button id="requesterLogoutBtn" onclick="logout()" class="hidden px-3 py-1.5 border border-red-200 text-red-600 hover:bg-red-50 rounded text-sm font-medium transition"><i class="fas fa-sign-out-alt mr-1"></i> Keluar</button>
+                </div>
+            </header>
+
+            <script>
+                // Auth Check & UI Logic
+                function logout() {
+                    localStorage.removeItem('eams_logged_in');
+                    localStorage.removeItem('eams_user_division');
+                    localStorage.removeItem('eams_user_role');
+                    window.location.href = 'login.html';
+                }
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    const role = localStorage.getItem('eams_user_role');
+                    const division = localStorage.getItem('eams_user_division');
+                    
+                    if (role === 'requester') {
+                        // 1. Hide Sidebar so they ONLY have access to this page
+                        document.getElementById('mainSidebar').classList.remove('md:flex');
+                        document.getElementById('mainSidebar').classList.add('hidden');
+                        document.getElementById('mainSidebar').style.display = 'none';
+
+                        // 2. Adjust Header for standalone view
+                        document.getElementById('requesterLogo').classList.remove('hidden');
+                        document.getElementById('requesterLogoutBtn').classList.remove('hidden');
+                        
+                        // 3. Show Division Badge
+                        if (division) {
+                            const badge = document.getElementById('userDivisionBadge');
+                            badge.textContent = "Divisi: " + division;
+                            badge.classList.remove('hidden');
+                            document.getElementById('headerSubtitle').textContent = "Anda mengajukan aset atas nama " + division;
+                        }
+                    }
+                });
+            </script>
+
+            <!-- Content -->
+            <div class="flex-1 overflow-y-auto p-8 bg-slate-50">
+                
+                <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    
+                    <!-- Form Layout -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3">
+                        
+                        <!-- Left Form Area -->
+                        <div class="lg:col-span-2 p-8 border-r border-slate-100">
+                            <form id="assetForm">
+                                <h3 class="text-lg font-semibold border-b pb-2 mb-6">1. General Information</h3>
+                                
+                                <div class="grid grid-cols-2 gap-6 mb-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Asset Name <span class="text-red-500">*</span></label>
+                                        <input type="text" id="assetName" required placeholder="e.g. Dell XPS 15 Laptop" class="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Category <span class="text-red-500">*</span></label>
+                                        <select class="w-full px-4 py-2 border border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                            <option>Perangkat IT</option>
+                                            <option>Machinery</option>
+                                            <option>Kendaraan</option>
+                                            <option>Furnitur & Fixtures</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-3 gap-6 mb-8">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Brand/Make</label>
+                                        <input type="text" placeholder="e.g. Dell" class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Serial Number</label>
+                                        <input type="text" id="serialNumber" placeholder="S/N" class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Condition</label>
+                                        <select class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm">
+                                            <option>Brand New</option>
+                                            <option>Good (Used)</option>
+                                            <option>Fair</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <h3 class="text-lg font-semibold border-b pb-2 mb-6">2. Location & Custodian</h3>
+                                
+                                <div class="grid grid-cols-2 gap-6 mb-8">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Branch / Site</label>
+                                        <select class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm">
+                                            <option>Head Office - Jakarta</option>
+                                            <option>Plant - Cikarang</option>
+                                            <option>Branch - Surabaya</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Department</label>
+                                        <select class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm">
+                                            <option>Information Technology</option>
+                                            <option>Finance</option>
+                                            <option>Production</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Assigned Custodian (User)</label>
+                                        <input type="text" placeholder="Search employee..." class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm">
+                                    </div>
+                                </div>
+
+                                <h3 class="text-lg font-semibold border-b pb-2 mb-6">3. Financial Details</h3>
+                                
+                                <div class="grid grid-cols-2 gap-6 mb-8">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Tgl Perolehan</label>
+                                        <input type="date" class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Acquisition Cost (IDR) <span class="text-red-500">*</span></label>
+                                        <input type="number" placeholder="0" class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Useful Life (Months)</label>
+                                        <input type="number" placeholder="48" class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 mb-1">Depreciation Method</label>
+                                        <select class="w-full px-4 py-2 border border-slate-300 rounded-md text-sm">
+                                            <option>Straight Line</option>
+                                            <option>Declining Balance</option>
+                                            <option>Double Declining</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-end space-x-4 border-t pt-6 mt-8">
+                                    <button type="button" class="px-6 py-2 border border-slate-300 text-slate-700 rounded-md hover:bg-slate-50">Save as Draft</button>
+                                    <button type="button" onclick="generateTag()" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 shadow-sm"><i class="fas fa-qrcode mr-2"></i>Buat Label & Simpan</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Right Sidebar Area (Asset Tag Preview) -->
+                        <div class="p-8 bg-slate-50 flex flex-col items-center">
+                            <h3 class="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-6 w-full text-center">Asset Tag Preview</h3>
+                            
+                            <!-- The Tag -->
+                            <div id="assetTagCard" class="w-64 bg-white border-2 border-slate-800 rounded-lg shadow-md p-4 flex flex-col items-center opacity-50 transition-opacity duration-300">
+                                <!-- Company Logo/Name -->
+                                <div class="text-center border-b-2 border-slate-800 pb-2 w-full mb-4">
+                                    <h4 class="font-bold text-slate-800 text-sm">PT. BORNEO ALUMINA INDONESIA</h4>
+                                    <p class="text-[10px] text-slate-500">Milik perusahaan</p>
+                                </div>
+                                
+                                <!-- QR Code Container -->
+                                <div id="qrcode" class="p-2 bg-white mb-2 border border-slate-200"></div>
+                                
+                                <!-- Details -->
+                                <div class="text-center w-full mt-2">
+                                    <p id="tagAssetCode" class="font-mono font-bold text-lg text-slate-800 tracking-wider">AST-XXXX</p>
+                                    <p id="tagAssetName" class="text-xs text-slate-600 mt-1 truncate px-2">Nama Aset</p>
+                                    <p class="text-[9px] text-slate-400 mt-2">If found, please return to HQ</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 text-center text-sm text-slate-500">
+                                <p><i class="fas fa-info-circle text-blue-500 mr-1"></i> The QR code acts as the unique identifier. Scanning it using the mobile app will open the verification audit form.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize an empty QR Code
+        const qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: "PENDING_REGISTRATION",
+            width: 128,
+            height: 128,
+            colorDark : "#0f172a",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+
+        function generateTag() {
+            const name = document.getElementById('assetName').value || 'New Asset';
+            const serial = document.getElementById('serialNumber').value || 'N/A';
+            
+            // Get other form values (by finding them in DOM, since some lack IDs)
+            const inputs = document.querySelectorAll('input, select');
+            const category = inputs[1].value || 'Unknown Category';
+            const branch = inputs[4].value || 'HQ Jakarta';
+            const cost = inputs[8].value || '0';
+            
+            // Generate a random asset code for demo purposes
+            const year = new Date().getFullYear();
+            const randomId = Math.floor(1000 + Math.random() * 9000);
+            const assetCode = `AST-${year}-${randomId}`;
+
+            // --- SAVE TO LOCALSTORAGE (For QR & Grid) ---
+            let customAssets = JSON.parse(localStorage.getItem('eams_custom_assets') || '[]');
+            customAssets.unshift({
+                code: assetCode,
+                name: name,
+                category: category,
+                branch: branch,
+                cost: cost,
+                nbv: cost,
+                status: 'Menunggu Persetujuan' // Changed status for realistic flow
+            });
+            localStorage.setItem('eams_custom_assets', JSON.stringify(customAssets));
+            
+            // --- CREATE APPROVAL TASK FOR FINANCE ---
+            const userDivision = localStorage.getItem('eams_user_division') || 'Staff Operasional';
+            let pendingApprovals = JSON.parse(localStorage.getItem('eams_pending_approvals') || '[]');
+            pendingApprovals.unshift({
+                reqId: `REQ-${year}-${randomId}`,
+                assetName: name,
+                cost: cost,
+                reqBy: userDivision,
+                type: 'Kapitalisasi Aset Baru'
+            });
+            localStorage.setItem('eams_pending_approvals', JSON.stringify(pendingApprovals));
+            // -----------------------------
+
+            // Update UI
+            document.getElementById('tagAssetCode').innerText = assetCode;
+            document.getElementById('tagAssetName').innerText = name;
+            document.getElementById('assetTagCard').classList.remove('opacity-50');
+
+            // Generate QR Code with JSON Payload for Mobile Scanner
+            const qrPayload = JSON.stringify({
+                id: assetCode,
+                n: name,
+                sn: serial,
+                action: "verify"
+            });
+            
+            qrcode.clear();
+            qrcode.makeCode(qrPayload);
+            
+            alert(`Aset berhasil diajukan!\nPermintaan dari Divisi ${userDivision} telah dikirim ke Tim Finance untuk diverifikasi.`);
+        }
+    </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const userName = localStorage.getItem('eams_user_name');
+        const userDivision = localStorage.getItem('eams_user_division');
+        const userRole = localStorage.getItem('eams_user_role');
+        
+        if (userName) {
+            const nameEl = document.getElementById('sidebarUserName');
+            if (nameEl) nameEl.textContent = userName;
+            
+            const avatarEl = document.getElementById('sidebarUserAvatar');
+            if (avatarEl) {
+                const initials = userName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+                avatarEl.textContent = initials;
+            }
+        }
+        if (userDivision) {
+            const roleEl = document.getElementById('sidebarUserRole');
+            if (roleEl) {
+                if (userRole === 'admin') {
+                    roleEl.textContent = 'Admin - ' + userDivision;
+                } else {
+                    roleEl.textContent = 'Staff - ' + userDivision;
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
+

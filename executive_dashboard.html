@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAMS - Dasbor Eksekutif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="text-slate-800 flex h-screen overflow-hidden relative">
+
+    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col hidden md:flex shrink-0 z-40">
+        <div class="h-16 flex items-center px-6 font-bold text-xl text-white tracking-wider border-b border-slate-700">
+            <i class="fas fa-boxes mr-3 text-blue-500"></i> EAMS <span class="text-xs ml-2 text-slate-400 font-normal">Enterprise</span>
+        </div>
+        <div class="overflow-y-auto flex-1 px-4 py-6 space-y-2">
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Dasbor</p>
+            <a href="executive_dashboard.html" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md"><i class="fas fa-chart-line w-6"></i> Eksekutif</a>
+            <a href="operational_dashboard.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-chart-pie w-6"></i> Operasional</a>
+            
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Manajemen Aset</p>
+            <a href="all_assets.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-list w-6"></i> Semua Aset</a>
+            <a href="asset_registration.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-plus-circle w-6"></i> Daftar Aset Baru</a>
+            <a href="qr_code_print.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-qrcode w-6"></i> Cetak Label QR</a>
+
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Keuangan</p>
+            <a href="depreciation_simulator.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-calculator w-6"></i> Penyusutan</a>
+            <a href="under_construction.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-exchange-alt w-6"></i> Kapitalisasi</a>
+
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Sistem</p>
+            <a href="approvals.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-check-circle w-6"></i> Persetujuan <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span></a>
+            <a href="under_construction.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-cog w-6"></i> Pengaturan</a>
+        </div>
+        
+        <div class="p-4 border-t border-slate-700 mt-auto flex items-center">
+            <div id="sidebarUserAvatar" class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold mr-3">JD</div>
+            <div>
+                <p id="sidebarUserName" class="text-sm font-medium text-white">John Doe</p>
+                <p id="sidebarUserRole" class="text-xs text-slate-400">Chief Financial Officer</p>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden relative">
+        <header class="h-16 bg-white border-b flex items-center justify-between px-8 shadow-sm shrink-0">
+            <div>
+                <h1 class="text-xl font-semibold">Dasbor Eksekutif</h1>
+                <p class="text-xs text-slate-500">PT. Borneo Alumina Indonesia - Tampilan Konsolidasi</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button onclick="downloadReport()" class="px-3 py-1.5 border rounded text-sm hover:bg-slate-50 text-slate-700 font-medium transition-colors focus:outline-none flex items-center shadow-sm">
+                    <i class="fas fa-spinner fa-spin mr-2 hidden" id="dlSpinner"></i>
+                    Unduh Laporan <i class="fas fa-download ml-2"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-medium text-slate-500">Total Nilai Perolehan</p>
+                            <h3 class="text-3xl font-bold mt-2 text-slate-800">Rp 150.5B</h3>
+                        </div>
+                        <div class="p-2 bg-blue-50 text-blue-600 rounded-lg"><i class="fas fa-money-bill-wave"></i></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-medium text-slate-500">Nilai Buku Bersih (NBV)</p>
+                            <h3 class="text-3xl font-bold mt-2 text-slate-800">Rp 85.2B</h3>
+                        </div>
+                        <div class="p-2 bg-indigo-50 text-indigo-600 rounded-lg"><i class="fas fa-chart-line"></i></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-medium text-slate-500">Akumulasi Penyusutan</p>
+                            <h3 class="text-3xl font-bold mt-2 text-slate-800">Rp 65.3B</h3>
+                        </div>
+                        <div class="p-2 bg-red-50 text-red-600 rounded-lg"><i class="fas fa-arrow-trend-down"></i></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-slate-100">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm font-medium text-slate-500">Total Aset Aktif</p>
+                            <h3 class="text-3xl font-bold mt-2 text-slate-800">12,450</h3>
+                        </div>
+                        <div class="p-2 bg-green-50 text-green-600 rounded-lg"><i class="fas fa-check-circle"></i></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-slate-100">
+                    <h4 class="text-lg font-semibold mb-4">Nilai Aset Berdasarkan Kategori</h4>
+                    <div class="relative h-64"><canvas id="categoryChart"></canvas></div>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-sm border border-slate-100">
+                    <h4 class="text-lg font-semibold mb-4">Proyeksi Penyusutan (6 Bulan Kedepan)</h4>
+                    <div class="relative h-64"><canvas id="forecastChart"></canvas></div>
+                </div>
+            </div>
+
+            <!-- Recent Acquisitions Table -->
+            <div class="bg-white rounded-lg shadow-sm border border-slate-100 overflow-hidden">
+                <div class="px-6 py-4 border-b flex justify-between items-center bg-slate-50/50">
+                    <h4 class="text-lg font-semibold text-slate-800">Kapitalisasi Bernilai Tinggi Terbaru</h4>
+                    <button class="text-sm text-blue-600 font-medium hover:underline">Lihat Semua</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b">
+                                <th class="px-6 py-3 font-semibold">Kode Aset</th>
+                                <th class="px-6 py-3 font-semibold">Nama Aset</th>
+                                <th class="px-6 py-3 font-semibold">Kategori</th>
+                                <th class="px-6 py-3 font-semibold">Tgl Perolehan</th>
+                                <th class="px-6 py-3 font-semibold text-right">Biaya (Rp)</th>
+                                <th class="px-6 py-3 font-semibold text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="px-6 py-4 font-mono font-medium text-blue-600">AST-2026-001</td>
+                                <td class="px-6 py-4 font-medium text-slate-700">Komatsu Excavator PC200</td>
+                                <td class="px-6 py-4 text-slate-500">Alat Berat</td>
+                                <td class="px-6 py-4 text-slate-500">15 Sep 2026</td>
+                                <td class="px-6 py-4 text-right font-medium">1,500,000,000</td>
+                                <td class="px-6 py-4 text-center"><span class="px-2 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded uppercase">Aktif</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="px-6 py-4 font-mono font-medium text-blue-600">AST-2026-002</td>
+                                <td class="px-6 py-4 font-medium text-slate-700">Toyota Alphard 2.5 G</td>
+                                <td class="px-6 py-4 text-slate-500">Kendaraan</td>
+                                <td class="px-6 py-4 text-slate-500">12 Sep 2026</td>
+                                <td class="px-6 py-4 text-right font-medium">1,350,000,000</td>
+                                <td class="px-6 py-4 text-center"><span class="px-2 py-1 bg-green-100 text-green-700 text-[10px] font-bold rounded uppercase">Aktif</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="px-6 py-4 font-mono font-medium text-blue-600">AST-2026-003</td>
+                                <td class="px-6 py-4 font-medium text-slate-700">Cisco Catalyst 9300 Switch</td>
+                                <td class="px-6 py-4 text-slate-500">Perangkat IT</td>
+                                <td class="px-6 py-4 text-slate-500">10 Sep 2026</td>
+                                <td class="px-6 py-4 text-right font-medium">85,000,000</td>
+                                <td class="px-6 py-4 text-center"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-[10px] font-bold rounded uppercase">Dlm Pengiriman</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Init Charts
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#64748b';
+
+        const ctxPie = document.getElementById('categoryChart').getContext('2d');
+        new Chart(ctxPie, {
+            type: 'bar',
+            data: {
+                labels: ['Alat Berat', 'Kendaraan', 'Perangkat IT', 'Furnitur', 'Bangunan'],
+                datasets: [{
+                    label: 'Net Book Value (Miliar Rp)',
+                    data: [45.2, 12.8, 8.5, 2.1, 16.6],
+                    backgroundColor: ['#3b82f6', '#10b981', '#6366f1', '#f59e0b', '#8b5cf6'],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { borderDash: [4, 4] } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        const ctxLine = document.getElementById('forecastChart').getContext('2d');
+        new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+                datasets: [{
+                    label: 'Beban Penyusutan (Miliar Rp)',
+                    data: [2.1, 2.1, 2.1, 2.3, 2.3, 2.4],
+                    borderColor: '#ef4444',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, grid: { borderDash: [4, 4] } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        function downloadReport() {
+            const spinner = document.getElementById('dlSpinner');
+            spinner.classList.remove('hidden');
+
+            setTimeout(() => {
+                const htmlTable = `
+                    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+                    <head><meta charset="utf-8"></head>
+                    <body>
+                        <table border="1" cellpadding="5" style="border-collapse: collapse; font-family: Arial, sans-serif;">
+                            <tr><th colspan="6" style="font-size:20px; background-color:#1e3a8a; color:white; text-align:left; padding:10px;">PT. BORNEO ALUMINA INDONESIA - EAMS REPORT</th></tr>
+                            <tr><td colspan="6" style="font-style:italic; color:#64748b;">Generated on: ${new Date().toLocaleString()}</td></tr>
+                            <tr><td colspan="6"></td></tr>
+                            <tr><th colspan="2" style="background-color:#cbd5e1; text-align:left; font-size:14px;">RINGKASAN KPI EKSEKUTIF</th><td colspan="4"></td></tr>
+                            <tr><th style="background-color:#f1f5f9; text-align:left; width:200px;">Metric</th><th style="background-color:#f1f5f9; text-align:right; width:150px;">Value</th><td colspan="4"></td></tr>
+                            <tr><td>Total Nilai Perolehan</td><td style="text-align:right; font-weight:bold;">Rp 150,500,000,000</td><td colspan="4"></td></tr>
+                            <tr><td>Nilai Buku Bersih (NBV)</td><td style="text-align:right; font-weight:bold; color:#1d4ed8;">Rp 85,200,000,000</td><td colspan="4"></td></tr>
+                            <tr><td>Akumulasi Penyusutan</td><td style="text-align:right; font-weight:bold; color:#b91c1c;">Rp 65,300,000,000</td><td colspan="4"></td></tr>
+                            <tr><td>Total Aset Aktif</td><td style="text-align:right; font-weight:bold;">12,450 Units</td><td colspan="4"></td></tr>
+                        </table>
+                    </body>
+                    </html>
+                `;
+                
+                const blob = new Blob([htmlTable], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.setAttribute("href", url);
+                link.setAttribute("download", "EAMS_Executive_Report.xls");
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                spinner.classList.add('hidden');
+            }, 800);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userName = localStorage.getItem('eams_user_name');
+            const userDivision = localStorage.getItem('eams_user_division');
+            const userRole = localStorage.getItem('eams_user_role');
+            if (userName) {
+                const nameEl = document.getElementById('sidebarUserName');
+                if (nameEl) nameEl.textContent = userName;
+                const avatarEl = document.getElementById('sidebarUserAvatar');
+                if (avatarEl) avatarEl.textContent = userName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+            }
+            if (userDivision) {
+                const roleEl = document.getElementById('sidebarUserRole');
+                if (roleEl) roleEl.textContent = (userRole === 'admin' ? 'Admin - ' : 'Staff - ') + userDivision;
+            }
+        });
+    </script>
+</body>
+</html>
+
+

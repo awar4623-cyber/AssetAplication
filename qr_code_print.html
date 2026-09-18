@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAMS - QR Code Print</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        
+        /* Print Styles */
+        @media print {
+            aside, header, .no-print { display: none !important; }
+            main { height: auto; overflow: visible; }
+            .print-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1cm; padding: 0; }
+            .print-card { break-inside: avoid; border: 1px solid #000; box-shadow: none; }
+            body { background-color: white; }
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col no-print">
+            <div class="h-16 flex items-center px-6 font-bold text-xl text-white tracking-wider border-b border-slate-700">
+                <i class="fas fa-boxes mr-3 text-blue-500"></i> EAMS
+            </div>
+            <div class="overflow-y-auto flex-1 px-4 py-6 space-y-2">
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Dasbor</p>
+                <a href="executive_dashboard.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-chart-line w-6"></i> Eksekutif</a>
+                
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Manajemen Aset</p>
+                <a href="all_assets.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-list w-6"></i> Semua Aset</a>
+                <a href="asset_registration.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-plus-circle w-6"></i> Daftar Aset Baru</a>
+                <a href="qr_code_print.html" class="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md transition"><i class="fas fa-qrcode w-6"></i> Cetak Label QR</a>
+
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Keuangan</p>
+                <a href="depreciation_simulator.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-calculator w-6"></i> Penyusutan</a>
+
+                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-6">Sistem</p>
+                <a href="approvals.html" class="flex items-center px-4 py-2 hover:bg-slate-800 rounded-md transition"><i class="fas fa-check-circle w-6"></i> Persetujuan</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="h-16 bg-white border-b flex items-center justify-between px-8 shadow-sm no-print">
+                <div>
+                    <h1 class="text-xl font-semibold">Generator QR Code Massal</h1>
+                    <p class="text-xs text-slate-500">Buat dan cetak label fisik untuk aset aktif</p>
+                </div>
+                <div>
+                    <button onclick="window.print()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium text-sm shadow-sm"><i class="fas fa-print mr-2"></i>Cetak Label</button>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="flex-1 overflow-y-auto p-8 bg-slate-100">
+                
+                <!-- Filter Section (No Print) -->
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 mb-8 flex space-x-4 items-end no-print">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Branch</label>
+                        <select class="px-3 py-1.5 border rounded-md text-sm w-48 focus:ring-1 focus:ring-blue-500">
+                            <option>HQ Jakarta</option>
+                            <option>Plant Cikarang</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Acquisition Year</label>
+                        <select class="px-3 py-1.5 border rounded-md text-sm w-32 focus:ring-1 focus:ring-blue-500">
+                            <option>2026</option>
+                            <option>2025</option>
+                        </select>
+                    </div>
+                    <button class="px-4 py-1.5 bg-slate-800 text-white rounded-md text-sm font-medium hover:bg-slate-900">Tampilkan Aset</button>
+                </div>
+
+                <!-- Print Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 print-grid" id="qrContainer">
+                    <!-- Cards will be generated here by JS -->
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let assets = [
+            { code: "AST-2026-001", name: "Komatsu PC200" },
+            { code: "AST-2026-002", name: "Toyota Alphard" },
+            { code: "AST-2026-003", name: "Cisco Catalyst Switch" },
+            { code: "AST-2026-004", name: "Dell PowerEdge R740" },
+            { code: "AST-2026-005", name: "Herman Miller Chair" },
+            { code: "AST-2026-006", name: "MacBook Pro M2" },
+            { code: "AST-2026-007", name: "Samsung 65' TV" },
+            { code: "AST-2026-008", name: "Epson Projector" }
+        ];
+
+        // Load Custom Assets from Registration Form
+        const customAssets = JSON.parse(localStorage.getItem('eams_custom_assets') || '[]');
+        if (customAssets.length > 0) {
+            // Map the detailed objects into the simplified format needed here
+            const formattedCustomAssets = customAssets.map(a => ({ code: a.code, name: a.name }));
+            // Prepend so newest show up first
+            assets = [...formattedCustomAssets, ...assets];
+        }
+
+        const container = document.getElementById('qrContainer');
+
+        assets.forEach((asset, index) => {
+            // Create Card Element
+            const card = document.createElement('div');
+            card.className = "print-card bg-white border-2 border-slate-800 rounded-lg p-4 flex flex-col items-center";
+            
+            // Generate HTML structure
+            card.innerHTML = `
+                <div class="text-center border-b-2 border-slate-800 pb-2 w-full mb-4">
+                    <h4 class="font-bold text-slate-800 text-sm leading-tight">PT. BORNEO ALUMINA INDONESIA</h4>
+                    <p class="text-[9px] text-slate-500">LABEL ASET</p>
+                </div>
+                <div id="qr-${index}" class="p-1 bg-white mb-2"></div>
+                <div class="text-center w-full mt-1">
+                    <p class="font-mono font-bold text-lg text-slate-800 tracking-wider">${asset.code}</p>
+                    <p class="text-xs text-slate-700 font-semibold mt-1 truncate px-2">${asset.name}</p>
+                </div>
+            `;
+            container.appendChild(card);
+
+            // Render QR
+            new QRCode(document.getElementById(`qr-${index}`), {
+                text: JSON.stringify({id: asset.code, n: asset.name}),
+                width: 100,
+                height: 100,
+                colorDark : "#0f172a",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.M
+            });
+        });
+    </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const userName = localStorage.getItem('eams_user_name');
+        const userDivision = localStorage.getItem('eams_user_division');
+        const userRole = localStorage.getItem('eams_user_role');
+        
+        if (userName) {
+            const nameEl = document.getElementById('sidebarUserName');
+            if (nameEl) nameEl.textContent = userName;
+            
+            const avatarEl = document.getElementById('sidebarUserAvatar');
+            if (avatarEl) {
+                const initials = userName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+                avatarEl.textContent = initials;
+            }
+        }
+        if (userDivision) {
+            const roleEl = document.getElementById('sidebarUserRole');
+            if (roleEl) {
+                if (userRole === 'admin') {
+                    roleEl.textContent = 'Admin - ' + userDivision;
+                } else {
+                    roleEl.textContent = 'Staff - ' + userDivision;
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
+
+
+
